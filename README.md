@@ -20,10 +20,8 @@ Pequeno projeto de uma biblioteca hipotética feito em Java.
 1. Ter o Java 21 instalado na máquina
 2. Clone o repositório
 3. Compile e execute com o maven:
-   `
-   mvn compile && mvn exec:java -Dexec.mainClass="org.example.Main"
-   `
-4. Siga o menu pelo terminal.
+`mvn compile` e `mvn exec:java -Dexec.mainClass="org.example.Main"`
+5. Siga o menu pelo terminal.
 
 ---
 
