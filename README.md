@@ -10,18 +10,20 @@ Pequeno projeto de uma biblioteca hipotética feito em Java.
 - **Linter:** Linter integrado do Intellij
 - **Formatador de código:** google-java-format
 - **IA:** ChatGPT o3 para debugging e code review (não foi utilizado na produção do código)
+- **Build tool:** Maven
+- **JDK:** OpenJDK 21 (Microsoft Build)
 
 ---
 
 ## Como executar
 
-1. Ter o Java 21 instalado na máquina (Foi utilizada a build da Microsoft do OpenJDK)
+1. Ter o Java 21 instalado na máquina
 2. Clone o repositório
-3. Compile os arquivos Java:
-   `javac -d out src/org/example/*.java`
-4. Rode o programa:
-   `java -cp out org.example.Main`
-5. Siga o menu pelo terminal.
+3. Compile e execute com o maven:
+   `
+   mvn compile && mvn exec:java -Dexec.mainClass="org.example.Main"
+   `
+4. Siga o menu pelo terminal.
 
 ---
 
