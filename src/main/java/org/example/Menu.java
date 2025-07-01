@@ -94,7 +94,7 @@ public final class Menu {
             var title = sc.nextLine();
 
             BookGenre parsedGenre = null;
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 2; i++) {
               listGenres();
               var genre = sc.nextLine();
               parsedGenre = castGenreStrToEnum(genre);
@@ -114,7 +114,7 @@ public final class Menu {
             }
 
             Author parsedAuthor = null;
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 2; i++) {
               System.out.println("Digite o nome do autor:");
               var author = sc.nextLine();
               parsedAuthor = searchAuthorByName(author);
@@ -137,7 +137,7 @@ public final class Menu {
 
             System.out.printf(
                 "O livro com o nome: %s\nGênero: %s\nAutor: %s\n foi criado com sucesso!\n",
-                title, parsedGenre.name(), parsedAuthor);
+                title, parsedGenre.name(), parsedAuthor.getName());
 
             printOptions();
             option = sc.nextLine();
@@ -150,8 +150,8 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            // tenta no máximo 3 vezes para não ficar preso no loop
-            for (int i = 0; i < 3 && user == null; i++) {
+            // tenta no máximo 2 vezes para não ficar preso no loop
+            for (int i = 0; i < 2 && user == null; i++) {
               System.out.println("Usuário não encontrado. Por favor verifique o CPF:");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -187,7 +187,7 @@ public final class Menu {
             var name = sc.nextLine();
             var author = searchAuthorByName(name);
 
-            for (int i = 0; i < 3 && author == null; i++) {
+            for (int i = 0; i < 2 && author == null; i++) {
               System.out.println("Autor não encontrado. Por favor verifique o nome:");
               name = sc.nextLine();
               author = searchAuthorByName(name);
@@ -218,7 +218,7 @@ public final class Menu {
             var bookTitle = sc.nextLine();
             var book = searchBookByTitle(bookTitle);
 
-            for (var i = 0; i < 3 && book == null; i++) {
+            for (var i = 0; i < 2 && book == null; i++) {
               System.out.println("Livro não encontrado. Por favor verifique o título:");
               bookTitle = sc.nextLine();
               book = searchBookByTitle(bookTitle);
@@ -236,7 +236,7 @@ public final class Menu {
 
             System.out.println("Digite o novo gênero do livro:");
             BookGenre parsedGenre = null;
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 2; i++) {
               listGenres();
               var genre = sc.nextLine();
               parsedGenre = castGenreStrToEnum(genre);
@@ -257,7 +257,7 @@ public final class Menu {
 
             Author parsedAuthor = null;
             String authorName = null;
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 2; i++) {
               System.out.println("Digite o nome do autor:");
               authorName = sc.nextLine();
               parsedAuthor = searchAuthorByName(authorName);
@@ -293,7 +293,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 && user == null; i++) {
+            for (var i = 0; i < 2 && user == null; i++) {
               System.out.println("Usuário não encontrado. Por favor verifique o nome");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -308,6 +308,8 @@ public final class Menu {
 
             if (user.hasAnyBorrowedBooks()) {
               System.out.println("O usuário já tem um livro emprestado");
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
@@ -316,7 +318,7 @@ public final class Menu {
             var bookTitle = sc.nextLine();
             var book = searchBookByTitle(bookTitle);
 
-            for (var i = 0; i < 3 && book == null; i++) {
+            for (var i = 0; i < 2 && book == null; i++) {
               System.out.println("Livro não encontrado. Por favor tente outro livro");
               printAvailableBooks();
               bookTitle = sc.nextLine();
@@ -325,13 +327,15 @@ public final class Menu {
 
             if (book == null) {
               System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
             borrowBook(user, book);
             System.out.printf(
                 "Livro emprestado: %s\nAutor:%s\nUsuário: %s\n",
-                book.getTitle(), book.getAuthor(), user.getName());
+                book.getTitle(), book.getAuthor().getName(), user.getName());
 
             printOptions();
             option = sc.nextLine();
@@ -344,7 +348,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 && user == null; i++) {
+            for (var i = 0; i < 2 && user == null; i++) {
               System.out.println("Usuário não encontrado. Por favor verifique o nome");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -359,6 +363,8 @@ public final class Menu {
 
             if (!user.hasAnyBorrowedBooks()) {
               System.out.println("O usuário não tem nenhum livro para devolver");
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
@@ -366,7 +372,7 @@ public final class Menu {
             var bookTitle = sc.nextLine();
             var book = searchBookByTitle(bookTitle);
 
-            for (var i = 0; i < 3 && book == null; i++) {
+            for (var i = 0; i < 2 && book == null; i++) {
               System.out.println("Livro não encontrado. Por favor tente outro livro");
               bookTitle = sc.nextLine();
               book = searchBookByTitle(bookTitle);
@@ -402,6 +408,8 @@ public final class Menu {
 
             if (user == null) {
               System.out.printf("O usuário com o CPF: %s não existe nos dados do sistema\n", cpf);
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
@@ -415,6 +423,8 @@ public final class Menu {
                   user.getCpf(), user.getName());
             }
 
+            printOptions();
+            option = sc.nextLine();
             break;
           }
 
@@ -435,6 +445,8 @@ public final class Menu {
             if (author == null) {
               System.out.printf(
                   "O autor com o nome: %s não existe nos dados do sistema\n", authorName);
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
@@ -447,24 +459,7 @@ public final class Menu {
 
         case "13":
           {
-            System.out.println("Digite o título do livro:");
-            var bookTitle = sc.nextLine();
-            var book = searchBookByTitle(bookTitle);
-
-            if (book == null) {
-              System.out.printf(
-                  "O livro com o nome: %s não existe nos dados do sistema\n", bookTitle);
-              break;
-            }
-
-            if (book.isAvailable()) {
-              System.out.printf(
-                  "O livro com o nome: %s está disponível no sistema", book.getTitle());
-            } else {
-              System.out.printf(
-                  "O livro com o nome: %s está indisponível no sistema", book.getTitle());
-            }
-
+            printAvailableBooks();
             printOptions();
             option = sc.nextLine();
             break;
@@ -476,7 +471,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 && user == null; i++) {
+            for (var i = 0; i < 2 && user == null; i++) {
               System.out.println("Usuário não encontrado");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -493,6 +488,8 @@ public final class Menu {
               var book = user.getBorrowedBook();
               System.out.printf(
                   "O usuário %s tem o livro emprestado %s\n", user.getName(), book.getTitle());
+              printOptions();
+              option = sc.nextLine();
               break;
             }
 
@@ -509,7 +506,7 @@ public final class Menu {
             var bookTitle = sc.nextLine();
             var book = searchBookByTitle(bookTitle);
 
-            for (var i = 0; i < 3 && book == null; i++) {
+            for (var i = 0; i < 2 && book == null; i++) {
               System.out.println("Livro não encontrado");
               bookTitle = sc.nextLine();
               book = searchBookByTitle(bookTitle);
@@ -542,6 +539,7 @@ public final class Menu {
           }
       }
     }
+    sc.close();
   }
 
   private void createUser(String name, String cpf) {
@@ -568,8 +566,8 @@ public final class Menu {
     library.addAuthor(name);
   }
 
-  private void editAuthor(Author autor, String name) {
-    library.editAuthor(autor, name);
+  private void editAuthor(Author author, String name) {
+    library.editAuthor(author, name);
   }
 
   private void getAllAuthors() {
@@ -597,7 +595,7 @@ public final class Menu {
 
     for (var book : books) {
       System.out.println("-- Livro --");
-      System.out.printf("Book %s\n", book.getTitle());
+      System.out.printf("Livro: %s\n", book.getTitle());
       System.out.println("--------------");
     }
   }
@@ -614,6 +612,24 @@ public final class Menu {
       System.out.println("--- Usuário ---");
       System.out.printf("Nome: %s\nCPF: %s\n", user.getName(), user.getCpf());
       System.out.println("--------------");
+    }
+  }
+
+  private void getAllBooks() {
+    for (var book : library.getBooks()) {
+      if (book.isAvailable()) {
+        System.out.println("-- Livro ---");
+        System.out.printf(
+            "Título: %s\nGênero: %s\nAutor: %s",
+            book.getTitle(), book.getGenre().name(), book.getAuthor().getName());
+        System.out.println("--------------");
+      } else {
+        System.out.println("-- Livro ---");
+        System.out.printf(
+            "Título: %s\nGênero: %s\nAutor: %s (INDISPONÍVEL)",
+            book.getTitle(), book.getGenre().name(), book.getAuthor().getName());
+        System.out.println("--------------");
+      }
     }
   }
 

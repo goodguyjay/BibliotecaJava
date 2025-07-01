@@ -17,9 +17,6 @@ public final class Library {
 
   public void addBook(String title, BookGenre genre, Author author) {
     books.add(new Book(title, genre, author));
-    System.out.printf(
-        "Novo livro cadastrado. Título: %s\nGênero: %s\nAutor: %s\n",
-        title, genre, author.getName());
   }
 
   public void addUser(String name, String cpf) {
@@ -74,6 +71,10 @@ public final class Library {
       }
     }
 
+    if (availableBooks.isEmpty()) {
+      System.out.println("Nenhum livro disponível para empréstimo");
+    }
+
     return availableBooks;
   }
 
@@ -87,23 +88,21 @@ public final class Library {
   }
 
   public void editBook(Book book, String newTitle, BookGenre genre, Author author) {
-    for (var registeredBook : books) {
-      if (Objects.equals(book.getTitle(), newTitle)) {
-        book.setTitle(newTitle);
-        book.setGenre(genre);
-        book.setAuthor(author);
-        return;
-      }
+    if (books.contains(book)) {
+      book.setTitle(newTitle);
+      book.setGenre(genre);
+      book.setAuthor(author);
     }
   }
 
+  public List<Book> getBooks() {
+    return this.books;
+  }
+
   public void editUser(User user, String newCpf, String newName) {
-    for (var registeredUser : this.users) {
-      if (Objects.equals(registeredUser, user)) {
-        registeredUser.setCpf(newCpf);
-        registeredUser.setName(newName);
-        return;
-      }
+    if (users.contains(user)) {
+      user.setName(newName);
+      user.setCpf(newCpf);
     }
   }
 
@@ -119,12 +118,9 @@ public final class Library {
     System.out.printf("Novo autor registrado. Nome: %s\n", name);
   }
 
-  public void editAuthor(Author autor, String newName) {
-    for (var registeredAuthors : this.authors) {
-      if (Objects.equals(registeredAuthors.getName(), autor.getName())) {
-        registeredAuthors.setName(newName);
-        return;
-      }
+  public void editAuthor(Author author, String newName) {
+    if (authors.contains(author)) {
+      author.setName(newName);
     }
   }
 
