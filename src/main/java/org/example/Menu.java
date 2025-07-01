@@ -9,7 +9,7 @@ public final class Menu {
     this.library = new Library();
   }
 
-  public void PrintOptions() {
+  public void printOptions() {
     var menu =
         """
         Bem vindo a livraria. Por favor, selecione uma opção:
@@ -53,7 +53,7 @@ public final class Menu {
     System.out.println(menu);
   }
 
-  public void ReadOption() {
+  public void readOption() {
     var sc = new Scanner(System.in);
     var option = sc.nextLine();
 
@@ -66,7 +66,7 @@ public final class Menu {
             System.out.println("Digite o CPF do novo usuário: ");
             var cpf = sc.nextLine();
             createUser(name, cpf);
-            PrintOptions();
+            printOptions();
             option = sc.nextLine();
             break;
           }
@@ -76,7 +76,7 @@ public final class Menu {
             System.out.println("Digite o nome do autor:");
             var name = sc.nextLine();
             createAuthor(name);
-            PrintOptions();
+            printOptions();
             option = sc.nextLine();
             break;
           }
@@ -86,64 +86,239 @@ public final class Menu {
             System.out.println("Digite o título do livro:");
             var title = sc.nextLine();
 
-            listGenres();
-            var genre = sc.nextLine();
-            var parsedGenre = castGenreStrToEnum(genre);
-            while (parsedGenre == null) {
-              genre = sc.nextLine();
+            BookGenre parsedGenre = null;
+            for (var i = 0; i < 3; i++) {
+              listGenres();
+              var genre = sc.nextLine();
               parsedGenre = castGenreStrToEnum(genre);
+
+              if (parsedGenre != null) {
+                break; // gênero válido, sai do loop
+              }
+
+              System.out.println("Gênero inválido. Por favor tente novamente");
             }
 
-            System.out.println("Digite o nome do autor:");
-            var author = sc.nextLine();
-            var parsedAuthor = castAuthorStrToClass(author);
-            while (parsedAuthor == null) {
-              author = sc.nextLine();
-              parsedAuthor = castAuthorStrToClass(author);
+            if (parsedGenre == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            Author parsedAuthor = null;
+            for (var i = 0; i < 3; i++) {
+              System.out.println("Digite o nome do autor:");
+              var author = sc.nextLine();
+              parsedAuthor = searchAuthorByName(author);
+
+              if (parsedAuthor != null) {
+                break; // autor válido, sai do loop
+              }
+
+              System.out.println("Autor não encontrado. Por favor tente novamente");
+            }
+
+            if (parsedAuthor == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
             }
 
             createBook(title, parsedGenre, parsedAuthor);
 
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "4":
+          {
+            System.out.println("Digite o atual CPF do usuário: ");
+            var cpf = sc.nextLine();
+            var user = searchUserByCpf(cpf);
+
+            // tenta no máximo 3 vezes para não ficar preso no loop
+            for (int i = 0; i < 3 && user == null; i++) {
+              System.out.println("Usuário não encontrado. Por favor verifique o CPF:");
+              cpf = sc.nextLine();
+              user = searchUserByCpf(cpf);
+            }
+
+            if (user == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            System.out.println("Digite o novo CPF:");
+            var newCpf = sc.nextLine();
+
+            System.out.println("Digite o novo nome:");
+            var newName = sc.nextLine();
+
+            editUser(user, newCpf, newName);
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "5":
+          {
+            System.out.println("Digite o nome do autor:");
+            var name = sc.nextLine();
+            var author = searchAuthorByName(name);
+
+            for (int i = 0; i < 3 && author == null; i++) {
+              System.out.println("Autor não encontrado. Por favor verifique o nome:");
+              name = sc.nextLine();
+              author = searchAuthorByName(name);
+            }
+
+            if (author == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            System.out.println("Digite o novo nome:");
+            var newName = sc.nextLine();
+
+            editAuthor(author, newName);
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "7":
+          {
+            System.out.println("Digite o CPF do usuário:");
+            var cpf = sc.nextLine();
+            var user = searchUserByCpf(cpf);
+
+            for (var i = 0; i < 3 & user == null; i++) {
+              System.out.println("Usuário não encontrado. Por favor verifique o nome");
+              cpf = sc.nextLine();
+              user = searchUserByCpf(cpf);
+            }
+
+            if (user == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            if (user.hasAnyBorrowedBooks()) {
+              System.out.println("O usuário já tem um livro emprestado");
+              break;
+            }
+
+            System.out.println("Digite o nome do livro:");
+            printAvailableBooks();
+            var bookTitle = sc.nextLine();
+            var book = searchBookByTitle(bookTitle);
+
+            for (var i = 0; i < 3 && book == null; i++) {
+              System.out.println("Livro não encontrado. Por favor tente outro livro");
+              printAvailableBooks();
+              bookTitle = sc.nextLine();
+              book = searchBookByTitle(bookTitle);
+            }
+
+            if (book == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              break;
+            }
+
+            borrowBook(user, book);
+            System.out.printf(
+                "Livro emprestado: %s\nAutor:%s\nUsuário: %s\n",
+                book.getTitle(), book.getAuthor(), user.getName());
+
+            printOptions();
+            option = sc.nextLine();
             break;
           }
 
         case "9":
           {
             getAllUsers();
-            PrintOptions();
+            printOptions();
             option = sc.nextLine();
             break;
           }
 
-        default:
-          System.out.println("Opção inválida. Por favor tente novamente.");
-          PrintOptions();
-          option = sc.nextLine();
+        case "19":
+          System.out.println("Adeus :)");
           break;
+
+        default:
+          {
+            System.out.println("Opção inválida. Por favor tente novamente.");
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
       }
     }
   }
 
-  public void createUser(String name, String cpf) {
+  private void createUser(String name, String cpf) {
     library.addUser(name, cpf);
   }
 
-  public void createAuthor(String name) {
+  private void borrowBook(User user, Book book) {
+    library.borrowBook(user, book);
+  }
+
+  private void editUser(User user, String newCpf, String newName) {
+    library.editUser(user, newCpf, newName);
+  }
+
+  private User searchUserByCpf(String cpf) {
+    return library.searchUserByCpf(cpf);
+  }
+
+  private void createAuthor(String name) {
     library.addAuthor(name);
   }
 
-  public void createBook(String title, BookGenre genre, Author author) {
+  private void editAuthor(Author autor, String name) {
+    library.editAuthor(autor, name);
+  }
+
+  private void createBook(String title, BookGenre genre, Author author) {
     library.addBook(title, genre, author);
   }
 
-  public void listGenres() {
+  private Book searchBookByTitle(String title) {
+    return library.searchBookByTitle(title);
+  }
+
+  private void printAvailableBooks() {
+    var books = library.getBooks();
+
+    for (var book : books) {
+      System.out.println("-- Livro --");
+      System.out.printf("Book %s\n", book.getTitle());
+      System.out.println("--------------");
+    }
+  }
+
+  private void listGenres() {
     System.out.println("Selecione o gênero: ");
     for (var i = 0; i < BookGenre.values().length; i++) {
       System.out.printf("Gênero: %s\n", BookGenre.values()[i].toString());
     }
   }
 
-  public void getAllUsers() {
+  private void getAllUsers() {
     for (var user : library.getUsers()) {
       System.out.println("--- Usuário ---");
       System.out.printf("Nome: %s\nCPF: %s\n", user.getName(), user.getCpf());
@@ -161,18 +336,7 @@ public final class Menu {
     }
   }
 
-  private Author castAuthorStrToClass(String author) {
-    try {
-      var castedAuthor = Author.class.cast(author.trim());
-      if (library.doesAuthorExist(author)) {
-        return castedAuthor;
-      } else {
-        System.out.println("Nenhum autor com esse nome foi encontrado");
-        return null;
-      }
-    } catch (ClassCastException e) {
-      System.out.println("Autor inválido. Por favor tente novamente");
-      return null;
-    }
+  private Author searchAuthorByName(String author) {
+    return library.searchAuthorByName(author);
   }
 }

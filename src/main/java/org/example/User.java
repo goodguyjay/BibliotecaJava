@@ -43,6 +43,10 @@ public final class User {
     }
   }
 
+  public boolean hasAnyBorrowedBooks() {
+    return this.borrowedBook != null;
+  }
+
   public void returnBook(Book book) {
     this.borrowedBook = null;
     book.setAvailable(true);
