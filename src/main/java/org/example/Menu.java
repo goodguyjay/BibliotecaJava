@@ -66,6 +66,10 @@ public final class Menu {
             System.out.println("Digite o CPF do novo usuário: ");
             var cpf = sc.nextLine();
             createUser(name, cpf);
+
+            System.out.printf(
+                "O usuário com o nome: %s\nCPF: %s foi criado com sucesso\n", name, cpf);
+
             printOptions();
             option = sc.nextLine();
             break;
@@ -76,6 +80,9 @@ public final class Menu {
             System.out.println("Digite o nome do autor:");
             var name = sc.nextLine();
             createAuthor(name);
+
+            System.out.printf("O autor com o nome: %s foi criado com sucesso\n", name);
+
             printOptions();
             option = sc.nextLine();
             break;
@@ -128,6 +135,10 @@ public final class Menu {
 
             createBook(title, parsedGenre, parsedAuthor);
 
+            System.out.printf(
+                "O livro com o nome: %s\nGênero: %s\nAutor: %s\n foi criado com sucesso!\n",
+                title, parsedGenre.name(), parsedAuthor);
+
             printOptions();
             option = sc.nextLine();
             break;
@@ -159,6 +170,10 @@ public final class Menu {
             System.out.println("Digite o novo nome:");
             var newName = sc.nextLine();
 
+            System.out.printf(
+                "Usuário editado\nNome antigo: %s\nCPF antigo: %s\nNome novo: %s\nCPF novo: %s\n",
+                cpf, user.getName(), newCpf, newName);
+
             editUser(user, newCpf, newName);
 
             printOptions();
@@ -189,6 +204,8 @@ public final class Menu {
             var newName = sc.nextLine();
 
             editAuthor(author, newName);
+
+            System.out.printf("Autor editado\nNome antigo: %s\nNome novo: %s\n", name, newName);
 
             printOptions();
             option = sc.nextLine();
@@ -259,11 +276,11 @@ public final class Menu {
               break;
             }
 
-            editBook(book, newBookTitle, parsedGenre, parsedAuthor);
-
             System.out.printf(
                 "Livro editado\nTítulo antigo: %s\nTítulo novo: %s\nAutor antigo: %s\nAutor novo:%s\n",
-                bookTitle, newBookTitle, authorName, parsedAuthor.getName());
+                bookTitle, newBookTitle, book.getAuthor().getName(), parsedAuthor.getName());
+
+            editBook(book, newBookTitle, parsedGenre, parsedAuthor);
 
             printOptions();
             option = sc.nextLine();
@@ -276,7 +293,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 & user == null; i++) {
+            for (var i = 0; i < 3 && user == null; i++) {
               System.out.println("Usuário não encontrado. Por favor verifique o nome");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -327,7 +344,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 & user == null; i++) {
+            for (var i = 0; i < 3 && user == null; i++) {
               System.out.println("Usuário não encontrado. Por favor verifique o nome");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
@@ -422,12 +439,16 @@ public final class Menu {
             }
 
             System.out.printf("O autor com o nome: %s existe no sistema\n", author.getName());
+
+            printOptions();
+            option = sc.nextLine();
+            break;
           }
 
         case "13":
           {
             System.out.println("Digite o título do livro:");
-            var bookTitle = sc.next();
+            var bookTitle = sc.nextLine();
             var book = searchBookByTitle(bookTitle);
 
             if (book == null) {
@@ -455,7 +476,7 @@ public final class Menu {
             var cpf = sc.nextLine();
             var user = searchUserByCpf(cpf);
 
-            for (var i = 0; i < 3 & user == null; i++) {
+            for (var i = 0; i < 3 && user == null; i++) {
               System.out.println("Usuário não encontrado");
               cpf = sc.nextLine();
               user = searchUserByCpf(cpf);
