@@ -57,7 +57,16 @@ public final class Library {
     }
   }
 
-  public ArrayList<Book> getBooks() {
+  public void returnBook(User user, Book book) {
+    for (var registeredUser : this.users) {
+      if (Objects.equals(registeredUser.getCpf(), user.getCpf())) {
+        registeredUser.returnBook(book);
+        return;
+      }
+    }
+  }
+
+  public ArrayList<Book> getAvailableBooks() {
     var availableBooks = new ArrayList<Book>();
     for (var book : books) {
       if (book.isAvailable()) {
@@ -69,12 +78,23 @@ public final class Library {
   }
 
   public Book searchBookByTitle(String title) {
-    for (Book book : books) {
+    for (var book : books) {
       if (Objects.equals(book.getTitle(), title)) {
         return book;
       }
     }
     return null;
+  }
+
+  public void editBook(Book book, String newTitle, BookGenre genre, Author author) {
+    for (var registeredBook : books) {
+      if (Objects.equals(book.getTitle(), newTitle)) {
+        book.setTitle(newTitle);
+        book.setGenre(genre);
+        book.setAuthor(author);
+        return;
+      }
+    }
   }
 
   public void editUser(User user, String newCpf, String newName) {

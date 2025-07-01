@@ -38,7 +38,7 @@ public final class Menu {
 
         -- Gerenciamento de Autores --
         11. Verificar todos autores
-        12. Verificar se o usuário existe pelo nome
+        12. Verificar se o autor existe pelo nome
         --------------
 
         -- Visualização de dados --
@@ -195,6 +195,81 @@ public final class Menu {
             break;
           }
 
+        case "6":
+          {
+            System.out.println("Digite o título do livro:");
+            var bookTitle = sc.nextLine();
+            var book = searchBookByTitle(bookTitle);
+
+            for (var i = 0; i < 3 && book == null; i++) {
+              System.out.println("Livro não encontrado. Por favor verifique o título:");
+              bookTitle = sc.nextLine();
+              book = searchBookByTitle(bookTitle);
+            }
+
+            if (book == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            System.out.println("Digite o novo título do livro:");
+            var newBookTitle = sc.nextLine();
+
+            System.out.println("Digite o novo gênero do livro:");
+            BookGenre parsedGenre = null;
+            for (var i = 0; i < 3; i++) {
+              listGenres();
+              var genre = sc.nextLine();
+              parsedGenre = castGenreStrToEnum(genre);
+
+              if (parsedGenre != null) {
+                break;
+              }
+
+              System.out.println("Gênero inválido. Por favor tente novamente");
+            }
+
+            if (parsedGenre == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            Author parsedAuthor = null;
+            String authorName = null;
+            for (var i = 0; i < 3; i++) {
+              System.out.println("Digite o nome do autor:");
+              authorName = sc.nextLine();
+              parsedAuthor = searchAuthorByName(authorName);
+
+              if (parsedAuthor != null) {
+                break;
+              }
+
+              System.out.println("Autor não encontrado. Por favor tente novamente");
+            }
+
+            if (parsedAuthor == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            editBook(book, newBookTitle, parsedGenre, parsedAuthor);
+
+            System.out.printf(
+                "Livro editado\nTítulo antigo: %s\nTítulo novo: %s\nAutor antigo: %s\nAutor novo:%s\n",
+                bookTitle, newBookTitle, authorName, parsedAuthor.getName());
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
         case "7":
           {
             System.out.println("Digite o CPF do usuário:");
@@ -246,6 +321,54 @@ public final class Menu {
             break;
           }
 
+        case "8":
+          {
+            System.out.println("Digite o CPF do usuário:");
+            var cpf = sc.nextLine();
+            var user = searchUserByCpf(cpf);
+
+            for (var i = 0; i < 3 & user == null; i++) {
+              System.out.println("Usuário não encontrado. Por favor verifique o nome");
+              cpf = sc.nextLine();
+              user = searchUserByCpf(cpf);
+            }
+
+            if (user == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            if (!user.hasAnyBorrowedBooks()) {
+              System.out.println("O usuário não tem nenhum livro para devolver");
+              break;
+            }
+
+            System.out.println("Digite o nome do livro:");
+            var bookTitle = sc.nextLine();
+            var book = searchBookByTitle(bookTitle);
+
+            for (var i = 0; i < 3 && book == null; i++) {
+              System.out.println("Livro não encontrado. Por favor tente outro livro");
+              bookTitle = sc.nextLine();
+              book = searchBookByTitle(bookTitle);
+            }
+
+            if (book == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              break;
+            }
+
+            returnBook(user, book);
+            System.out.printf(
+                "Livro retornado: %s\nUsuário: %s\n", book.getTitle(), user.getName());
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
         case "9":
           {
             getAllUsers();
@@ -254,9 +377,140 @@ public final class Menu {
             break;
           }
 
-        case "19":
-          System.out.println("Adeus :)");
-          break;
+        case "10":
+          {
+            System.out.println("Digite o CPF do usuário");
+            var cpf = sc.nextLine();
+            var user = searchUserByCpf(cpf);
+
+            if (user == null) {
+              System.out.printf("O usuário com o CPF: %s não existe nos dados do sistema\n", cpf);
+              break;
+            }
+
+            if (user.hasAnyBorrowedBooks()) {
+              System.out.printf(
+                  "O usuário com o CPF: %s e nome %s está registrado no sistema e possui o livro %s emprestado\n",
+                  user.getCpf(), user.getName(), user.getBorrowedBook().getTitle());
+            } else {
+              System.out.printf(
+                  "O usuário com o CPF: %s e nome %s está registrado no sistema e não possui nenhum livro emprestado\n",
+                  user.getCpf(), user.getName());
+            }
+
+            break;
+          }
+
+        case "11":
+          {
+            getAllAuthors();
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "12":
+          {
+            System.out.println("Digite o nome do autor");
+            var authorName = sc.nextLine();
+            var author = searchAuthorByName(authorName);
+
+            if (author == null) {
+              System.out.printf(
+                  "O autor com o nome: %s não existe nos dados do sistema\n", authorName);
+              break;
+            }
+
+            System.out.printf("O autor com o nome: %s existe no sistema\n", author.getName());
+          }
+
+        case "13":
+          {
+            System.out.println("Digite o título do livro:");
+            var bookTitle = sc.next();
+            var book = searchBookByTitle(bookTitle);
+
+            if (book == null) {
+              System.out.printf(
+                  "O livro com o nome: %s não existe nos dados do sistema\n", bookTitle);
+              break;
+            }
+
+            if (book.isAvailable()) {
+              System.out.printf(
+                  "O livro com o nome: %s está disponível no sistema", book.getTitle());
+            } else {
+              System.out.printf(
+                  "O livro com o nome: %s está indisponível no sistema", book.getTitle());
+            }
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "14":
+          {
+            System.out.println("Digite o CPF do usuário:");
+            var cpf = sc.nextLine();
+            var user = searchUserByCpf(cpf);
+
+            for (var i = 0; i < 3 & user == null; i++) {
+              System.out.println("Usuário não encontrado");
+              cpf = sc.nextLine();
+              user = searchUserByCpf(cpf);
+            }
+
+            if (user == null) {
+              System.out.println("Máximo de tentativas alcançadas. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            if (user.hasAnyBorrowedBooks()) {
+              var book = user.getBorrowedBook();
+              System.out.printf(
+                  "O usuário %s tem o livro emprestado %s\n", user.getName(), book.getTitle());
+              break;
+            }
+
+            System.out.println("O usuário não possui nenhum livro emprestado");
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
+
+        case "15":
+          {
+            System.out.println("Digite o título do livro:");
+            var bookTitle = sc.nextLine();
+            var book = searchBookByTitle(bookTitle);
+
+            for (var i = 0; i < 3 && book == null; i++) {
+              System.out.println("Livro não encontrado");
+              bookTitle = sc.nextLine();
+              book = searchBookByTitle(bookTitle);
+            }
+
+            if (book == null) {
+              System.out.println("Máximo de tentativas alcançado. Cancelando operação");
+              printOptions();
+              option = sc.nextLine();
+              break;
+            }
+
+            if (book.isAvailable()) {
+              System.out.printf("O livro %s está disponível!\n", book.getTitle());
+            } else {
+              System.out.printf("O livro %s não está disponível\n", book.getTitle());
+            }
+
+            printOptions();
+            option = sc.nextLine();
+            break;
+          }
 
         default:
           {
@@ -277,6 +531,10 @@ public final class Menu {
     library.borrowBook(user, book);
   }
 
+  private void returnBook(User user, Book book) {
+    library.returnBook(user, book);
+  }
+
   private void editUser(User user, String newCpf, String newName) {
     library.editUser(user, newCpf, newName);
   }
@@ -293,8 +551,20 @@ public final class Menu {
     library.editAuthor(autor, name);
   }
 
+  private void getAllAuthors() {
+    for (var author : library.getAuthors()) {
+      System.out.println("--- Autor ---");
+      System.out.printf("Nome: %s\n", author.getName());
+      System.out.println("--------------");
+    }
+  }
+
   private void createBook(String title, BookGenre genre, Author author) {
     library.addBook(title, genre, author);
+  }
+
+  private void editBook(Book book, String newTitle, BookGenre newGenre, Author author) {
+    library.editBook(book, newTitle, newGenre, author);
   }
 
   private Book searchBookByTitle(String title) {
@@ -302,7 +572,7 @@ public final class Menu {
   }
 
   private void printAvailableBooks() {
-    var books = library.getBooks();
+    var books = library.getAvailableBooks();
 
     for (var book : books) {
       System.out.println("-- Livro --");
